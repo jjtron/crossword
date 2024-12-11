@@ -153,13 +153,10 @@ class CrosswordCreator():
         return False if one or more domains end up empty.
         """
         if arcs == None:
-            queue = self.initialize_arcs([])
-        else:
-            queue = arcs
-            pprint.pp(queue)
+            arcs = self.initialize_arcs([])
 
-        while len(queue) != 0:
-            arc = queue.pop(0)
+        while len(arcs) != 0:
+            arc = arcs.pop(0)
             arc_x = arc[0]
             arc_y = arc[1]
             if self.revise(arc_x, arc_y):
@@ -167,7 +164,7 @@ class CrosswordCreator():
                     return False
                 for neighbor in self.crossword.neighbors(arc_x):
                     if neighbor.i == arc_x.i and neighbor.j == arc_x.j:
-                        queue.append(arc_x, neighbor)
+                        arcs.append(arc_x, neighbor)
         return True
 
     def assignment_complete(self, assignment):
