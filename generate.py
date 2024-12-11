@@ -163,8 +163,9 @@ class CrosswordCreator():
                 if len(self.domains[arc_x]) == 0:
                     return False
                 for neighbor in self.crossword.neighbors(arc_x):
-                    if neighbor.i == arc_x.i and neighbor.j == arc_x.j:
-                        arcs.append(arc_x, neighbor)
+                    if neighbor.i != arc_y.i and neighbor.j != arc_y.j:
+                        arcs.append((neighbor, arc_x))
+
         return True
 
     def assignment_complete(self, assignment):
