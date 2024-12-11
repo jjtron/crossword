@@ -91,7 +91,6 @@ class CrosswordCreator():
         Enforce node and arc consistency, and then solve the CSP.
         """
         self.enforce_node_consistency()
-        return
         self.ac3()
         return self.backtrack(dict())
 
@@ -119,7 +118,12 @@ class CrosswordCreator():
         Return True if a revision was made to the domain of `x`; return
         False if no revision was made.
         """
-        raise NotImplementedError
+        overlap = self.is_overlap_between_x_and_y(x, y)
+        if overlap != None:
+            return False
+
+        revised = False
+
 
     def ac3(self, arcs=None):
         """
@@ -176,6 +180,24 @@ class CrosswordCreator():
         """
         raise NotImplementedError
 
+    def is_overlap_between_x_and_y(self, x, y):
+        '''
+        Returns the ith and jth coordinates of the words where they intersect
+        '''
+        overlaps = self.crossword.overlaps
+        for overlap in overlaps:
+            n_elements = 0
+            count = 0
+            for element in overlap:
+                if element == x and count == 0:
+                    n_elements += 1
+                if element == y and count == 1:
+                    n_elements += 1
+                if n_elements == 2:
+                    return overlaps[overlap]
+                count += 1
+        return None    
+
 
 def main():
 
@@ -191,6 +213,11 @@ def main():
     # Generate crossword
     crossword = Crossword(structure, words)
     creator = CrosswordCreator(crossword)
+
+    # DEVELOP AND TEST THE REVISE FUNCTION
+    # creator.revise(Variable(2, 1, 'down', 5), Variable(2, 1, 'across', 12))
+    # return
+
     assignment = creator.solve()
 
     # Print result
