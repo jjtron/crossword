@@ -220,17 +220,19 @@ class CrosswordCreator():
         degree. If there is a tie, any of the tied variables are acceptable
         return values.
         """
+
         current_lowest_length = math.inf
         chosen_vars = []
         for var in self.domains:
             if not var in assignment:
-                if var.length < current_lowest_length:
+                if len(self.domains[var]) < current_lowest_length:
                     chosen_vars.clear()
                     chosen_vars.append(var)
-                    current_lowest_length = var.length
+                    current_lowest_length = len(self.domains[var])
                 else:
-                    if var.length == current_lowest_length:
+                    if len(self.domains[var]) == current_lowest_length:
                         chosen_vars.append(var)
+
         if len(chosen_vars) == 1:
             # has a unique fewest-number of values
             return chosen_vars[0]
