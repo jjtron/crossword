@@ -1,4 +1,5 @@
 import sys
+import pprint
 
 from crossword import *
 
@@ -90,6 +91,7 @@ class CrosswordCreator():
         Enforce node and arc consistency, and then solve the CSP.
         """
         self.enforce_node_consistency()
+        return
         self.ac3()
         return self.backtrack(dict())
 
@@ -99,7 +101,14 @@ class CrosswordCreator():
         (Remove any values that are inconsistent with a variable's unary
          constraints; in this case, the length of the word.)
         """
-        raise NotImplementedError
+        removables = []
+        for var in self.domains:
+            for word in self.domains[var]:
+                if var.length != len(word):
+                    removables.append([var, word])
+        for i in range(0, len(removables)):
+            self.domains[removables[i][0]].remove(removables[i][1])
+
 
     def revise(self, x, y):
         """
