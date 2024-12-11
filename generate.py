@@ -91,8 +91,8 @@ class CrosswordCreator():
         Enforce node and arc consistency, and then solve the CSP.
         """
         self.enforce_node_consistency()
-        self.ac3()
-        return self.backtrack(dict())
+        #self.ac3()
+        #return self.backtrack(dict())
 
     def enforce_node_consistency(self):
         """
@@ -118,11 +118,29 @@ class CrosswordCreator():
         Return True if a revision was made to the domain of `x`; return
         False if no revision was made.
         """
+
         overlap = self.is_overlap_between_x_and_y(x, y)
-        if overlap != None:
+        if overlap == None:
             return False
 
         revised = False
+        # for x in X.domain:
+        #   if no y in Y.domain satisfies constraint for (X,Y):
+        removables = []
+        for word_x in self.domains[x]:
+            contraint_satisfied = False
+            character_at_intersection_x = word_x[overlap[0]]
+            for word_y in self.domains[y]:
+                character_at_intersection_y = word_y[overlap[1]]
+                if character_at_intersection_x == character_at_intersection_y:
+                    contraint_satisfied = True
+            if not contraint_satisfied:
+                removables.append(word_x)
+                revised = True
+        for i in range(0, len(removables)):
+            self.domains[x].remove(removables[i])
+
+        return revised
 
 
     def ac3(self, arcs=None):
