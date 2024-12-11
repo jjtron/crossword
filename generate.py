@@ -94,7 +94,7 @@ class CrosswordCreator():
         """
         self.enforce_node_consistency()
         self.ac3()
-        #return self.backtrack(dict())
+        return self.backtrack(dict())
 
     def enforce_node_consistency(self):
         """
@@ -283,7 +283,19 @@ class CrosswordCreator():
 
         If no assignment is possible, return None.
         """
-        raise NotImplementedError
+        if self.assignment_complete(assignment):
+            return assignment
+        else:
+            var = self.select_unassigned_variable(assignment)
+            for value in self.order_domain_values(var, assignment):
+                if self.consistent(assignment):
+                    assignment[var] = value
+                    result = self.backtrack(assignment)
+                    if result != False:
+                        return result
+                del assignment[var]
+            return None
+
 
     def is_overlap_between_x_and_y(self, x, y):
         '''
