@@ -180,11 +180,28 @@ class CrosswordCreator():
         return complete
 
     def consistent(self, assignment):
+        conflict = False
+        for var in assignment:
+            # Check for unary constriants
+            if var.length != len(assignment[var]):
+                conflict = True
+            # Check for binary constriants
+            for neighbor in self.crossword.neighbors(var):
+                overlap = self.crossword.overlaps[var, neighbor]
+                ith_character_of_var = overlap[0]
+                jth_character_of_neighbor = overlap[1]
+                var_word = assignment[var]
+                if not neighbor in assignment:
+                    conflict = True
+                else:
+                    neighbor_word = assignment[neighbor]
+                    if var_word[ith_character_of_var] != neighbor_word[jth_character_of_neighbor]:
+                        conflict = True
         """
         Return True if `assignment` is consistent (i.e., words fit in crossword
         puzzle without conflicting characters); return False otherwise.
         """
-        raise NotImplementedError
+        return not conflict
 
     def order_domain_values(self, var, assignment):
         """
