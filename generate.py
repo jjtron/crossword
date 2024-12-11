@@ -191,9 +191,7 @@ class CrosswordCreator():
                 ith_character_of_var = overlap[0]
                 jth_character_of_neighbor = overlap[1]
                 var_word = assignment[var]
-                if not neighbor in assignment:
-                    conflict = True
-                else:
+                if neighbor in assignment:
                     neighbor_word = assignment[neighbor]
                     if var_word[ith_character_of_var] != neighbor_word[jth_character_of_neighbor]:
                         conflict = True
