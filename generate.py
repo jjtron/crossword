@@ -2,6 +2,8 @@ import sys
 import pprint
 
 from crossword import *
+import math
+import random
 
 
 class CrosswordCreator():
@@ -218,8 +220,43 @@ class CrosswordCreator():
         degree. If there is a tie, any of the tied variables are acceptable
         return values.
         """
-        raise NotImplementedError
+        current_lowest_length = math.inf
+        chosen_vars = []
+        for var in self.domains:
+            if not var in assignment:
+                if var.length < current_lowest_length:
+                    chosen_vars.clear()
+                    chosen_vars.append(var)
+                    current_lowest_length = var.length
+                else:
+                    if var.length == current_lowest_length:
+                        chosen_vars.append(var)
+        if len(chosen_vars) == 1:
+            # has a unique fewest-number of values
+            return chosen_vars[0]
+        else:
+            # a tie
+            current_most_neighbors = 0
+            chosen_vars_by_value = chosen_vars.copy()
+            chosen_vars.clear()
+            for i in range(0, len(chosen_vars_by_value)):
+                neighbor_count = len(self.crossword.neighbors(chosen_vars_by_value[i]))
+                if neighbor_count > current_most_neighbors:
+                    chosen_vars.clear()
+                    chosen_vars.append(chosen_vars_by_value[i])
+                    current_most_neighbors = neighbor_count
+                else:
+                    if neighbor_count == current_most_neighbors:
+                        chosen_vars.append(chosen_vars_by_value[i])
 
+        if len(chosen_vars) == 1:
+            # has a unique highest degree
+            return chosen_vars[0]
+        else:
+            # choose a random var from among many equally high degrees
+            return chosen_vars[random.randint(0, len(chosen_vars) - 1)]
+
+        
     def backtrack(self, assignment):
         """
         Using Backtracking Search, take as input a partial assignment for the
